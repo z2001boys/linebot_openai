@@ -28,10 +28,19 @@ openai.api_key = os.getenv('OPENAI_API_KEY')
 
 def GPT_response(text):
     # 接收回應
-    response = openai.Completion.create(model="gpt-4o", prompt=text, temperature=0.5, max_tokens=500)
-    print(response)
+    response = openai.Completion.create(
+        model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": "你是一個C#程式語言助手，請使用專業的語氣"},
+                {
+                    "role": "user",
+                    "content": text
+                }
+            ]
+    )    
+    print(response.choices[0].message)
     # 重組回應
-    answer = response['choices'][0]['text'].replace('。','')
+    answer = response.choices[0].message.replace('。','')
     return answer
 
 
