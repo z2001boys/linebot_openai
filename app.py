@@ -30,6 +30,7 @@ def GPT_response(text):
     # 接收回應
     response = openai.Completion.create(
         model="gpt-4o-mini",
+        prompt=text,
             messages=[
                 {"role": "system", "content": "你是一個C#程式語言助手，請使用專業的語氣"},
                 {
