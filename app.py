@@ -24,24 +24,26 @@ line_bot_api = LineBotApi(os.getenv('CHANNEL_ACCESS_TOKEN'))
 handler = WebhookHandler(os.getenv('CHANNEL_SECRET'))
 # OPENAI API Key初始化設定
 openai.api_key = os.getenv('OPENAI_API_KEY')
+global OpenAiClient
+OpenAiClient = openai.OpenAI()
 
 
 def GPT_response(text):
     # 接收回應
-    response = openai.Completion.create(
-        model="gpt-4o-mini",
-        prompt=text,
+    global OpenAiClient
+    completion = OpenAiClient.chat.completions.create(
+            model="gpt-4o-mini",
             messages=[
-                {"role": "system", "content": "你是一個C#程式語言助手，請使用專業的語氣"},
+                {"role": "system", "content": "You are a helpful assistant."},
                 {
                     "role": "user",
                     "content": text
                 }
             ]
-    )    
-    print(response.choices[0].message)
+        ) 
+    print(completion.choices[0].message)
     # 重組回應
-    answer = response.choices[0].message.replace('。','')
+    answer = completion.choices[0].message.replace('。','')
     return answer
 
 
