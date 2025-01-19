@@ -11,7 +11,7 @@ from linebot.models import *
 #======python的函數庫==========
 import tempfile, os
 import datetime
-from openai import OpenAI
+import openai
 import time
 import traceback
 #======python的函數庫==========
@@ -24,7 +24,7 @@ line_bot_api = LineBotApi(os.getenv('CHANNEL_ACCESS_TOKEN'))
 handler = WebhookHandler(os.getenv('CHANNEL_SECRET'))
 # OPENAI API Key初始化設定
 global aiClient
-aiClient = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+aiClient = openai.OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
 
 
