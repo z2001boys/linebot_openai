@@ -12,6 +12,7 @@ from linebot.models import *
 import tempfile, os
 import datetime
 import openai
+from openai import OpenAI
 import time
 import traceback
 #======python的函數庫==========
@@ -25,7 +26,7 @@ handler = WebhookHandler(os.getenv('CHANNEL_SECRET'))
 # OPENAI API Key初始化設定
 openai.api_key = os.getenv('OPENAI_API_KEY')
 global OpenAiClient
-OpenAiClient = openai.OpenAI()
+OpenAiClient = OpenAI()
 
 
 def GPT_response(text):
