@@ -53,20 +53,20 @@ def GPT_response(text):
         store=True,
         messages = messageQueue
     )
+    answer = print(completion.choices[0].message.content)
+    print(answer)
 
     # 將助手回應追加到 messageQueue
     messageQueue.append({
         "role": "assistant",
-        "content": response
+        "content": answer
     })
 
     # 控制 messageQueue 長度，保留最多 10 筆記錄
     if len(messageQueue) > 10:
         messageQueue.pop(1)  # 刪除第二筆（保留第一筆系統提示）
                                                  
-    print(completion.choices[0].message.content)
-    # 重組回應
-    answer = completion.choices[0].message.content
+
     return answer
 
 
