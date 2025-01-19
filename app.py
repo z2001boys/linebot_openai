@@ -53,7 +53,7 @@ def GPT_response(text):
         store=True,
         messages = messageQueue
     )
-    answer = print(completion.choices[0].message.content).strip()
+    answer = completion.choices[0].message.content.strip()
     print(answer)
 
     # 將助手回應追加到 messageQueue
@@ -91,8 +91,22 @@ def callback():
 def handle_message(event):
     msg = event.message.text
     try:
-        GPT_answer = GPT_response(msg)        
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(GPT_answer))
+        GPT_answer = GPT_response(msg)   
+
+        # 訊息切分
+        max_length = 5000  # LINE 單則訊息的上限
+        messages = []
+
+        # 將訊息切分為每段最多 5000 字元
+        while len(GPT_answer) > max_length:
+            messages.append(GPT_answer[:max_length])
+            GPT_answer = GPT_answer[max_length:]
+        messages.append(GPT_answer)  # 加入剩下的訊息段
+
+        # 逐段傳送回應
+        for msg_part in messages:
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(msg_part))
+        
     except:
         print(traceback.format_exc())
         line_bot_api.reply_message(event.reply_token, TextSendMessage('你所使用的OPENAI API key額度可能已經超過，請於後台Log內確認錯誤訊息'))
