@@ -53,7 +53,7 @@ def GPT_response(text):
         store=True,
         messages = messageQueue
     )
-    answer = print(completion.choices[0].message.content)
+    answer = print(completion.choices[0].message.content).strip()
     print(answer)
 
     # 將助手回應追加到 messageQueue
@@ -91,8 +91,7 @@ def callback():
 def handle_message(event):
     msg = event.message.text
     try:
-        GPT_answer = GPT_response(msg)
-        print(GPT_answer)
+        GPT_answer = GPT_response(msg)        
         line_bot_api.reply_message(event.reply_token, TextSendMessage(GPT_answer))
     except:
         print(traceback.format_exc())
