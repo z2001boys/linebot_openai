@@ -11,7 +11,7 @@ from linebot.models import *
 #======python的函數庫==========
 import tempfile, os
 import datetime
-import openai
+from openai import OpenAI
 import time
 import traceback
 #======python的函數庫==========
@@ -23,21 +23,25 @@ line_bot_api = LineBotApi(os.getenv('CHANNEL_ACCESS_TOKEN'))
 # Channel Secret
 handler = WebhookHandler(os.getenv('CHANNEL_SECRET'))
 # OPENAI API Key初始化設定
-openai.api_key = os.getenv('OPENAI_API_KEY')
+global aiClient
+aiClient = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+
 
 
 def GPT_response(text):
+    global aiClient
     # 接收回應
-    response = openai.chat.Completion.create(model="gpt-4o", # prompt=text, temperature=0.5, max_tokens=2048)
-                                             store=True,
-                                             messages = [
-                                                  {"role": "user", "content": text}
-                                                ]
-                                            )
+    completion = client.chat.completions.create(
+        model="gpt-4o",
+        store=True,
+        messages=[
+            {"role": "user", "content": text}
+        ]
+    )
                                                  
-    print(response)
+    print(completion.choices[0].message.content)
     # 重組回應
-    answer = response['choices'][0]['text'].replace('。','')
+    answer = completion.choices[0].message.content.replace('。','')
     return answer
 
 
