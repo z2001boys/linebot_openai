@@ -23,25 +23,50 @@ line_bot_api = LineBotApi(os.getenv('CHANNEL_ACCESS_TOKEN'))
 # Channel Secret
 handler = WebhookHandler(os.getenv('CHANNEL_SECRET'))
 # OPENAI API Key初始化設定
-global aiClient
+global aiClient,messageQueue
 aiClient = openai.OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-
+messageQueue = [
+    {
+              "role": "developer",
+              "content": [
+                {
+                  "type": "text",
+                  "text": '你是一個C#的助理，請用專業語氣提供我答案'
+                }
+              ]
+    }
+]
 
 
 def GPT_response(text):
-    global aiClient
+    global aiClient,messageQueue
+    
+    # 新增使用者的輸入訊息到 messageQueue
+    messageQueue.append({
+        "role": "user",
+        "content": text
+    })
+    
     # 接收回應
     completion = aiClient.chat.completions.create(
         model="gpt-4o",
         store=True,
-        messages=[
-            {"role": "user", "content": text}
-        ]
+        messageQueue
     )
+
+    # 將助手回應追加到 messageQueue
+    messageQueue.append({
+        "role": "assistant",
+        "content": response
+    })
+
+    # 控制 messageQueue 長度，保留最多 10 筆記錄
+    if len(messageQueue) > 10:
+        messageQueue.pop(1)  # 刪除第二筆（保留第一筆系統提示）
                                                  
     print(completion.choices[0].message.content)
     # 重組回應
-    answer = completion.choices[0].message.content.replace('。','')
+    answer = completion.choices[0].message.content
     return answer
 
 
