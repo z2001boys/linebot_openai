@@ -90,6 +90,28 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     msg = event.message.text
+    global messageQueue
+
+    #功能切換
+    # 檢查特殊指令以切換角色
+    if msg == "CSharp工作":
+        messageQueue[0] = {
+            "role": "system",
+            "content": "你是一個C#工作的助理，請用專業語氣回答使用者的問題(繁體中文)。"
+        }
+        reply_message = "角色已切換為 C# 工作助理。請繼續輸入您的問題。"
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(reply_message))
+        return
+        
+    elif msg == "英文老師":
+        messageQueue[0] = {
+            "role": "system",
+            "content": "你是一個英文老師，請將使用者的訊息翻譯成英文，並提供更好的表達方式與文法修正(繁體中文)。"
+        }
+        reply_message = "角色已切換為英文老師。請輸入您要翻譯或修正的內容。"
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(reply_message))
+        return
+    
     try:
         GPT_answer = GPT_response(msg)   
 
