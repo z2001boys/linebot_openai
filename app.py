@@ -31,7 +31,7 @@ aiClient = openai.OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 def GPT_response(text):
     global aiClient
     # 接收回應
-    completion = client.chat.completions.create(
+    completion = aiClient.chat.completions.create(
         model="gpt-4o",
         store=True,
         messages=[
