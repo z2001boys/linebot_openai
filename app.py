@@ -51,7 +51,7 @@ def GPT_response(text):
     completion = aiClient.chat.completions.create(
         model="gpt-4o",
         store=True,
-        messageQueue
+        messages = messageQueue
     )
 
     # 將助手回應追加到 messageQueue
