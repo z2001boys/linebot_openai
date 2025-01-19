@@ -12,7 +12,6 @@ from linebot.models import *
 import tempfile, os
 import datetime
 import openai
-from openai import OpenAI
 import time
 import traceback
 #======python的函數庫==========
@@ -31,20 +30,10 @@ OpenAiClient = OpenAI()
 
 def GPT_response(text):
     # 接收回應
-    global OpenAiClient
-    completion = OpenAiClient.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
-                {
-                    "role": "user",
-                    "content": text
-                }
-            ]
-        ) 
-    print(completion.choices[0].message)
+    response = openai.Completion.create(model="gpt-4o", prompt=text, temperature=0.5, max_tokens=1000)
+    print(response)
     # 重組回應
-    answer = completion.choices[0].message.replace('。','')
+    answer = response['choices'][0]['text'].replace('。','')
     return answer
 
 
